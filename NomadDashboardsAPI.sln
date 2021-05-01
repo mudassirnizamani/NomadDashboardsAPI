@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NomadDashboardsAPI", "NomadDashboardsAPI\NomadDashboardsAPI.csproj", "{8842B304-95CE-44D9-87F7-67DD23DF7AAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8842B304-95CE-44D9-87F7-67DD23DF7AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8842B304-95CE-44D9-87F7-67DD23DF7AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8842B304-95CE-44D9-87F7-67DD23DF7AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8842B304-95CE-44D9-87F7-67DD23DF7AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C51AA0F-1406-4BE7-A0C5-6A2D6A48BF4C}
+	EndGlobalSection
+EndGlobal
