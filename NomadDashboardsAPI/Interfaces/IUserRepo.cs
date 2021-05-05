@@ -7,5 +7,6 @@ namespace NomadDashboardsAPI.Interfaces
 {
     public interface IUserRepo
     {
+        
     }
 }
