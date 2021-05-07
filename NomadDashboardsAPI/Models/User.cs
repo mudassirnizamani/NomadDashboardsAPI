@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NomadDashboardsAPI.Models
@@ -34,5 +35,14 @@ namespace NomadDashboardsAPI.Models
 
         [Column(TypeName = "nvarchar(150)")]
         public string State { get; set; }
+
+        [Column(TypeName = "nvarchar(150)")]
+        public bool IsActive { get; set; }
+
+        [Column(TypeName = "nvarchar(150)")]
+        public string LastLoginIp { get; set; }
+
+        [Column(TypeName = "nvarchar(150)")]
+        public string CreatedAt { get; set; }
     }
 }

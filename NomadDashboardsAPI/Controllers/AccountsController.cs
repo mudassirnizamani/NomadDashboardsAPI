@@ -66,6 +66,8 @@ namespace NomadDashboardsAPI.Controllers
         [Route("Employer/Signup")]
         public async Task<object> SignupEmployerUser(EmployerSignupModel model)
         {
+            var currentDate = DateTime.Now.ToString("d/M/yyyy");
+
             var appUser = new User()
             {
                 Email = model.Email,
@@ -80,7 +82,10 @@ namespace NomadDashboardsAPI.Controllers
                 PhoneNumber = model.PhoneNumber,
                 Country = model.Country,
                 City = model.City,
-                ComponyAddress = model.ComponyAddress
+                ComponyAddress = model.ComponyAddress,
+                IsActive = false,
+                LastLoginIp = "",
+                CreatedAt = currentDate,
             };
 
             try
@@ -89,6 +94,41 @@ namespace NomadDashboardsAPI.Controllers
                 if (result.Succeeded)
                 {
                     var role = await _userManager.AddToRoleAsync(appUser, "Employer");
+                }
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
+            }
+        }
+
+        // For Creating User as Customer
+        [HttpPost]
+        [Route("Employee/Signup")]
+        public async Task<object> SignupEmployeeUser(EmployeeSignupModel model)
+        {
+            var currentDate = DateTime.Now.ToString("dd-MM-yyyy");
+            var appUser = new User()
+            {
+                Email = model.Email,
+                UserName = model.UserName,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                IsActive = false,
+                LastLoginIp = "",
+                CreatedAt = currentDate,
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(appUser, model.Password);
+
+                if (result.Succeeded)
+                {
+                    var role = await _userManager.AddToRoleAsync(appUser, "Employee");
                 }
 
                 return Ok(result);
