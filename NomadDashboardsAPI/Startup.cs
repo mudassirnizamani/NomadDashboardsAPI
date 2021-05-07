@@ -46,7 +46,7 @@ namespace NomadDashboardsAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NomadDashboardsAPI", Version = "v1" });
             });
 
-            services.AddIdentityCore<User>().AddEntityFrameworkStores<UserContext>();
+            services.AddIdentityCore<User>().AddRoles<IdentityRole>().AddEntityFrameworkStores<UserContext>();
 
             services.Configure<IdentityOptions>(opt =>
             {

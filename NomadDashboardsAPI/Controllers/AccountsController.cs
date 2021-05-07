@@ -19,12 +19,14 @@ namespace NomadDashboardsAPI.Controllers
         private readonly IUserRepo _repository;
         private UserManager<User> _userManager;
         private readonly IOptions<AppSettings> _appSettings;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountsController(IUserRepo repository, UserManager<User> userManager, IOptions<AppSettings> appSettings)
+        public AccountsController(IUserRepo repository, UserManager<User> userManager, IOptions<AppSettings> appSettings, RoleManager<IdentityRole> roleManager)
         {
             _repository = repository;
             _userManager = userManager;
             _appSettings = appSettings;
+            _roleManager = roleManager;
         }
 
         [HttpPost]
@@ -56,6 +58,61 @@ namespace NomadDashboardsAPI.Controllers
             catch (Exception)
             {
                 return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
+            }
+        }
+
+        // For Creating User as Client
+        [HttpPost]
+        [Route("Employer/Signup")]
+        public async Task<object> SignupEmployerUser(EmployerSignupModel model)
+        {
+            var appUser = new User()
+            {
+                Email = model.Email,
+                UserName = model.UserName,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Website = model.Website,
+                Position = model.Position,
+                ComponyName = model.ComponyName,
+                ZipCode = model.ZipCode,
+                State = model.State,
+                PhoneNumber = model.PhoneNumber,
+                Country = model.Country,
+                City = model.City,
+                ComponyAddress = model.ComponyAddress
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(appUser, model.Password);
+                if (result.Succeeded)
+                {
+                    var role = await _userManager.AddToRoleAsync(appUser, "Employer");
+                }
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUserRole/{userName}")]
+        public async Task<ActionResult> GetUserRole(string userName)
+        {
+            var appuser = await _userManager.FindByNameAsync(userName);
+            if (appuser != null)
+            {
+                var userRole = await _userManager.GetRolesAsync(appuser);
+
+                return Ok(userRole);
+            }
+            else
+            {
+                return BadRequest(new { succeeded = false, message = "USERNOTFOUND" });
             }
         }
 
