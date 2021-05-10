@@ -22,6 +22,7 @@
 
         public string Country { get; set; }
 
+        public string ProfilePic { get; set; }
         public string Answer_1 { get; set; }
         public string Answer_2 { get; set; }
         public string Answer_3 { get; set; }

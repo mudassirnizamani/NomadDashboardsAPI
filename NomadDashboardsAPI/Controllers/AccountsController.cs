@@ -59,6 +59,7 @@ namespace NomadDashboardsAPI.Controllers
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     UserName = model.UserName,
+                    ProfilePic = model.ProfilePic,
                 };
 
                 var clientAnswers = new ClientQuestion()

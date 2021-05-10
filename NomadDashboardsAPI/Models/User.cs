@@ -39,5 +39,8 @@ namespace NomadDashboardsAPI.Models
 
         [Column(TypeName = "nvarchar(150)")]
         public string CreatedAt { get; set; }
+
+        [Column(TypeName = "nvarchar(max)")]
+        public string ProfilePic { get; set; }
     }
 }
