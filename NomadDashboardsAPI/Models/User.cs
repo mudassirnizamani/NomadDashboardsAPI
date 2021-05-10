@@ -15,8 +15,6 @@ namespace NomadDashboardsAPI.Models
         [Column(TypeName = "nvarchar(150)")]
         public string Website { get; set; }
 
-        [Column(TypeName = "nvarchar(150)")]
-        public string Position { get; set; }
 
         [Column(TypeName = "nvarchar(150)")]
         public string ComponyName { get; set; }
@@ -28,13 +26,10 @@ namespace NomadDashboardsAPI.Models
         public string City { get; set; }
 
         [Column(TypeName = "nvarchar(150)")]
-        public string ComponyAddress { get; set; }
+        public string ZipCode { get; set; }
 
         [Column(TypeName = "nvarchar(150)")]
-        public int ZipCode { get; set; }
-
-        [Column(TypeName = "nvarchar(150)")]
-        public string State { get; set; }
+        public string Province { get; set; }
 
         [Column(TypeName = "nvarchar(150)")]
         public bool IsActive { get; set; }

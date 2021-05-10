@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NomadDashboardsAPI.Models;
 
 namespace NomadDashboardsAPI.Data
 {
@@ -7,5 +8,7 @@ namespace NomadDashboardsAPI.Data
         public APIContext(DbContextOptions<APIContext> options) : base(options)
         {
         }
+
+        public DbSet<ClientQuestion> ClientQuestionsAnswers { get; set; }
     }
 }

@@ -32,14 +32,11 @@ namespace NomadDashboardsAPI.Controllers
                 user.FirstName,
                 user.LastName,
                 user.Website,
-                user.Position,
                 user.ComponyName,
                 user.ZipCode,
-                user.State,
                 user.PhoneNumber,
                 user.Country,
                 user.City,
-                user.ComponyAddress
             };
         }
 
@@ -77,11 +74,7 @@ namespace NomadDashboardsAPI.Controllers
                 user.Country = model.Country;
                 user.City = model.City;
                 user.PhoneNumber = model.PhoneNumber;
-                user.Position = model.Position;
-                user.State = model.State;
-                user.ZipCode = model.ZipCode;
                 user.ComponyName = model.ComponyName;
-                user.ComponyAddress = model.ComponyAddress;
 
                 await _userManager.UpdateAsync(user);
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NomadDashboardsAPI.Data;
 using NomadDashboardsAPI.Interfaces;
 using NomadDashboardsAPI.Models;
 using System;
@@ -20,87 +21,82 @@ namespace NomadDashboardsAPI.Controllers
         private UserManager<User> _userManager;
         private readonly IOptions<AppSettings> _appSettings;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly APIContext _apiContext;
 
-        public AccountsController(IUserRepo repository, UserManager<User> userManager, IOptions<AppSettings> appSettings, RoleManager<IdentityRole> roleManager)
+        public AccountsController(IUserRepo repository, UserManager<User> userManager, IOptions<AppSettings> appSettings, RoleManager<IdentityRole> roleManager, APIContext aPIContext)
         {
             _repository = repository;
             _userManager = userManager;
             _appSettings = appSettings;
             _roleManager = roleManager;
-        }
-
-        [HttpPost]
-        [Route("Signup")]
-        public async Task<object> SignupUser(SignupModel model)
-        {
-            var appUser = new User()
-            {
-                Email = model.Email,
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Website = model.Website,
-                Position = model.Position,
-                ComponyName = model.ComponyName,
-                ZipCode = model.ZipCode,
-                State = model.State,
-                PhoneNumber = model.PhoneNumber,
-                Country = model.Country,
-                City = model.City,
-                ComponyAddress = model.ComponyAddress
-            };
-
-            try
-            {
-                var result = await _userManager.CreateAsync(appUser, model.Password);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
-            }
+            _apiContext = aPIContext;
         }
 
         // For Creating User as Client
         [HttpPost]
-        [Route("Employer/Signup")]
-        public async Task<object> SignupEmployerUser(EmployerSignupModel model)
+        [Route("Signup/Client")]
+        public async Task<object> ClientSignup(ClientSignupModel model)
         {
             var currentDate = DateTime.Now.ToString("d/M/yyyy");
 
-            var appUser = new User()
-            {
-                Email = model.Email,
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Website = model.Website,
-                Position = model.Position,
-                ComponyName = model.ComponyName,
-                ZipCode = model.ZipCode,
-                State = model.State,
-                PhoneNumber = model.PhoneNumber,
-                Country = model.Country,
-                City = model.City,
-                ComponyAddress = model.ComponyAddress,
-                IsActive = false,
-                LastLoginIp = "",
-                CreatedAt = currentDate,
-            };
+            var email = await _userManager.FindByEmailAsync(model.Email);
 
-            try
+            if (email == null)
             {
-                var result = await _userManager.CreateAsync(appUser, model.Password);
-                if (result.Succeeded)
+                var appUser = new User()
                 {
-                    var role = await _userManager.AddToRoleAsync(appUser, "Employer");
-                }
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Website = model.Website,
+                    ComponyName = model.ComponyName,
+                    Country = model.Country,
+                    City = model.City,
+                    ZipCode = model.ZipCode,
+                    Province = model.Province,
+                    IsActive = false,
+                    LastLoginIp = "",
+                    CreatedAt = currentDate,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    UserName = model.UserName,
+                };
 
-                return Ok(result);
+                var clientAnswers = new ClientQuestion()
+                {
+                    UserName = model.UserName,
+                    Question_1_Answer = model.Answer_1,
+                    Question_2_Answer = model.Answer_2,
+                    Question_3_Answer = model.Answer_3,
+                    Question_4_Answer = model.Answer_4,
+                    Question_5_Answer = model.Answer_5,
+                    Question_6_Answer = model.Answer_6,
+                    Question_7_Answer = model.Answer_7,
+                    Question_8_Answer = model.Answer_8,
+                    Question_9_Answer = model.Answer_9,
+                };
+
+                try
+                {
+                    var result = await _userManager.CreateAsync(appUser, model.Password);
+                    var adding = await _apiContext.AddAsync(clientAnswers);
+                    if (result.Succeeded)
+                    {
+                        var test = await _apiContext.SaveChangesAsync();
+                        var role = await _userManager.AddToRoleAsync(appUser, "Client");
+                    }
+
+                    return Ok(result);
+                }
+                catch (Exception e)
+                {
+                    return Ok(new { succeeded = false, error = new { code = "ServerNotRespond", description = "Something went wrong in the Server !" } });
+                    Console.WriteLine(e)
+;
+                }
             }
-            catch (Exception)
+            else
             {
-                return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
+                return Ok(new { succeeded = false, error = "DuplicateEmail", description = "Email '" + model.Email + "` already taken" });
             }
         }
 
@@ -148,7 +144,7 @@ namespace NomadDashboardsAPI.Controllers
             {
                 var userRole = await _userManager.GetRolesAsync(appuser);
 
-                return Ok(userRole);
+                return Ok(new { succeeded = true, roles = userRole });
             }
             else
             {
@@ -166,13 +162,17 @@ namespace NomadDashboardsAPI.Controllers
             {
                 if (user == null)
                 {
-                    return BadRequest(new { succeeded = false, error = "USERNAMEDOESNOTEXIST", message = "Username does not exist" });
+                    return Ok(new { succeeded = false, code = "UsernameNotFound", description = "Username '" + model.UserName + "' was not Found" });
+                }
+                else if (user != null && !user.IsActive)
+                {
+                    return Ok(new { succeeded = false, code = "AccountNotActivated", description = "Your Account is not Activated '" + model.UserName + "', wait for your Account to be Activated" });
                 }
                 else if (user != null && !password)
                 {
-                    return BadRequest(new { succeeded = false, error = "PASSWORDISINCORRECT", message = "Password is Incorrect" });
+                    return Ok(new { succeeded = false, code = "IncorrectPassword", description = "Incorrect Password for '" + model.UserName + "'" });
                 }
-                else if (user != null && password)
+                else if (user != null && password && user.IsActive)
                 {
                     var tokenDescription = new SecurityTokenDescriptor
                     {
@@ -188,16 +188,16 @@ namespace NomadDashboardsAPI.Controllers
                     var secuarityToken = tokenHandler.CreateToken(tokenDescription);
                     var token = tokenHandler.WriteToken(secuarityToken);
 
-                    return Ok(new { succeeded = true, message = "Here is your Token :)", token = token });
+                    return Ok(new { succeeded = true, description = "Here is your Token :)", token = token });
                 }
                 else
                 {
-                    return BadRequest(new { succeeded = false, message = "Username or Password in Incorrect" });
+                    return Ok(new { succeeded = false, code = "InvalidCredentials", description = "Username or Password in Incorrect" });
                 }
             }
             catch (Exception)
             {
-                return BadRequest(new { succeeded = false, message = "Something went wrong in the Server !" });
+                return Ok(new { succeeded = false, code = "ServerError", description = "Something went wrong in the Server !" });
             }
         }
     }
