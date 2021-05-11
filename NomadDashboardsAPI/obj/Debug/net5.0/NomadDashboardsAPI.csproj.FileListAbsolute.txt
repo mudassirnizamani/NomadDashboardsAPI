@@ -64,3 +64,5 @@ E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\bin\De
 E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\bin\Debug\net5.0\NomadDashboardsAPI.pdb
 E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\obj\Debug\net5.0\NomadDashboardsAPI.genruntimeconfig.cache
 E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\obj\Debug\net5.0\NomadDashboardsAPI.csprojAssemblyReference.cache
+E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Programs\Projects\Dotnet&Angular\NomadDashboardsAPI\NomadDashboardsAPI\bin\Debug\net5.0\System.Net.WebSockets.WebSocketProtocol.dll

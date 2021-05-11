@@ -14,6 +14,7 @@ using NomadDashboardsAPI.Models;
 using NomadDashboardsAPI.Repositories;
 using System;
 using System.Text;
+using NomadDashboardsAPI.HubConfig;
 
 namespace NomadDashboardsAPI
 {
@@ -37,7 +38,6 @@ namespace NomadDashboardsAPI
             services.AddDbContext<UserContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
 
 
-            services.AddControllers();
             services.AddScoped<IUserRepo, SqlUserRepo>();
 
 
@@ -47,6 +47,11 @@ namespace NomadDashboardsAPI
             });
 
             services.AddIdentityCore<User>().AddRoles<IdentityRole>().AddEntityFrameworkStores<UserContext>();
+
+            services.AddSignalR(opt =>
+            {
+                opt.EnableDetailedErrors = true;
+            });
 
             services.Configure<IdentityOptions>(opt =>
             {
@@ -83,6 +88,7 @@ namespace NomadDashboardsAPI
 
             services.AddCors();
 
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,9 +107,17 @@ namespace NomadDashboardsAPI
 
             app.UseCors(m => m.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+            
+
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chats");
+            });
 
             app.UseEndpoints(endpoints =>
             {

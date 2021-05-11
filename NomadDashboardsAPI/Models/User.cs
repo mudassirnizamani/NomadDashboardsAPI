@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NomadDashboardsAPI.Models
@@ -14,7 +13,6 @@ namespace NomadDashboardsAPI.Models
 
         [Column(TypeName = "nvarchar(150)")]
         public string Website { get; set; }
-
 
         [Column(TypeName = "nvarchar(150)")]
         public string ComponyName { get; set; }
@@ -42,5 +40,11 @@ namespace NomadDashboardsAPI.Models
 
         [Column(TypeName = "nvarchar(max)")]
         public string ProfilePic { get; set; }
+
+        // [Column(TypeName = "nvarchar(max)")]
+        // public string DOB { get; set; }
+
+        // [Column(TypeName = "nvarchar(max)")]
+        // public string MartialStatus { get; set; }
     }
 }

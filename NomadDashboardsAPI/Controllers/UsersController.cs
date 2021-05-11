@@ -21,23 +21,19 @@ namespace NomadDashboardsAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<Object> GetUserProfile()
+        public async Task<object> GetUserProfile()
         {
             string userId = User.Claims.First(i => i.Type == "UserID").Value;
-            var user = await _userManager.FindByIdAsync(userId);
-            return new
+            try
             {
-                user.Email,
-                user.UserName,
-                user.FirstName,
-                user.LastName,
-                user.Website,
-                user.ComponyName,
-                user.ZipCode,
-                user.PhoneNumber,
-                user.Country,
-                user.City,
-            };
+                var user = await _userManager.FindByIdAsync(userId);
+                return Ok(new { succeeded = true, user = user });
+            }
+            catch (Exception)
+            {
+                return Ok(new { succeeded = false, code = "ServerError", description = "Something went wrong in Server !" });
+            }
+
         }
 
         [HttpGet]
@@ -78,11 +74,11 @@ namespace NomadDashboardsAPI.Controllers
 
                 await _userManager.UpdateAsync(user);
 
-                return Ok(new {succeeded = true, message = $"Username '{user.UserName}' is Updated"});
+                return Ok(new { succeeded = true, message = $"Username '{user.UserName}' is Updated" });
             }
             else
             {
-                return BadRequest(new {succeeded = false});
+                return BadRequest(new { succeeded = false });
             }
 
         }
