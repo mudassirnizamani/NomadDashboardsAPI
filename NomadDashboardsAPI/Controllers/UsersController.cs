@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NomadDashboardsAPI.Data;
 using NomadDashboardsAPI.Models;
+using NomadDashboardsAPI.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +16,12 @@ namespace NomadDashboardsAPI.Controllers
     public class UsersController : ControllerBase
     {
         private UserManager<User> _userManager;
+        private readonly UserContext _userContext;
 
-        public UsersController(UserManager<User> userManager)
+        public UsersController(UserManager<User> userManager, UserContext userContext)
         {
             _userManager = userManager;
+            _userContext = userContext;
         }
 
         [HttpGet]
@@ -36,6 +41,7 @@ namespace NomadDashboardsAPI.Controllers
 
         }
 
+        
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<object> GetAllUsers()

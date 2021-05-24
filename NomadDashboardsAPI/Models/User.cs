@@ -1,10 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NomadDashboardsAPI.Models
 {
     public class User : IdentityUser
     {
+
+        public User()
+        {
+            Messages = new HashSet<Message>();
+        }
+
+        public virtual ICollection<Message> Messages { get; set; }
+
         [Column(TypeName = "nvarchar(150)")]
         public string FirstName { get; set; }
 
@@ -41,10 +50,5 @@ namespace NomadDashboardsAPI.Models
         [Column(TypeName = "nvarchar(max)")]
         public string ProfilePic { get; set; }
 
-        // [Column(TypeName = "nvarchar(max)")]
-        // public string DOB { get; set; }
-
-        // [Column(TypeName = "nvarchar(max)")]
-        // public string MartialStatus { get; set; }
     }
 }

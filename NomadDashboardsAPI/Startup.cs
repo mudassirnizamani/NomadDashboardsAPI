@@ -41,10 +41,7 @@ namespace NomadDashboardsAPI
             services.AddScoped<IUserRepo, SqlUserRepo>();
 
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "NomadDashboardsAPI", Version = "v1" });
-            });
+            
 
             services.AddIdentityCore<User>().AddRoles<IdentityRole>().AddEntityFrameworkStores<UserContext>();
 
@@ -89,6 +86,12 @@ namespace NomadDashboardsAPI
             services.AddCors();
 
             services.AddControllers();
+
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "NomadDashboardsAPI", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
